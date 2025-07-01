@@ -6,13 +6,6 @@ import { useRouter } from 'expo-router';
 import { db } from '@/constants/firebaseConfig';
 import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '@/context/AuthContext';
-import {
-  KeyboardAvoidingView,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Platform,
-} from 'react-native';
 
 export default function AthleteScreen() {
   const router = useRouter();
@@ -101,42 +94,32 @@ if (!res.ok) {
   };
 
   return (
-  <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    keyboardVerticalOffset={80} // adjust based on header height
-  >
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {name && <Text style={styles.greeting}>Hi {name} 👋</Text>}
+    <View style={styles.container}>
+      {name && <Text style={styles.greeting}>Hi {name} 👋</Text>}
 
-        <Text style={styles.title}>How are you feeling today?</Text>
+      <Text style={styles.title}>How are you feeling today?</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="You can reflect on how you felt after practice, during a game, about team dynamics, your motivation, a recent challenge, or even your goals."
-          multiline
-          value={message}
-          onChangeText={setMessage}
-        />
+      <TextInput
+        style={styles.input}
+        placeholder="You can reflect on how you felt after practice, during a game, about team dynamics, your motivation, a recent challenge, or even your goals."
+        multiline
+        value={message}
+        onChangeText={setMessage}
+      />
+      <View style={styles.switchRow}>
+        <Text style={{ marginRight: 10 }}>Submit Privately</Text>
+        <Button title={anonymous ? "Yes" : "No"} onPress={() => setAnonymous(!anonymous)} />
+      </View>
 
-        <View style={styles.switchRow}>
-          <Text style={{ marginRight: 10 }}>Submit Privately</Text>
-          <Button title={anonymous ? "Yes" : "No"} onPress={() => setAnonymous(!anonymous)} />
-        </View>
+      <Button title="Submit Reflection" onPress={handleSubmit} />
 
-        <Button title="Submit Reflection" onPress={handleSubmit} />
+      {loading && <ActivityIndicator style={{ marginTop: 10 }} />}
 
-        {loading && <ActivityIndicator style={{ marginTop: 10 }} />}
-
-        {submitted && (
-          <Text style={styles.result}>✅ Thanks for your response!</Text>
-        )}
-      </ScrollView>
-    </TouchableWithoutFeedback>
-  </KeyboardAvoidingView>
-);
-
+      {submitted && (
+        <Text style={styles.result}>✅ Thanks for your response!</Text>
+      )}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -158,13 +141,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
   },
-  scrollContainer: {
-  flexGrow: 1,
-  padding: 20,
-  justifyContent: 'center',
-  backgroundColor: 'white',
-},
-
   title: {
     fontSize: 24,
     fontWeight: 'bold',

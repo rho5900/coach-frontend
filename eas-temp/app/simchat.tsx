@@ -6,7 +6,6 @@ import { useRouter } from 'expo-router';
 import { View, Text, TextInput, Button, FlatList, StyleSheet, Alert } from 'react-native';
 import { db } from '@/constants/firebaseConfig';
 import { doc, getDoc, setDoc, updateDoc, addDoc, collection } from 'firebase/firestore';
-import { SafeAreaView, ScrollView, Platform, KeyboardAvoidingView } from 'react-native';
 
 
 type Message = {
@@ -215,73 +214,60 @@ if (scoreValue !== null) {
 
 
   if (step === 'form') {
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={80}
-      >
-        <ScrollView contentContainerStyle={{ padding: 16 }}>
-          <Text style={styles.title}>Create Athlete Profile</Text>
-          <TextInput
-            placeholder="Age"
-            keyboardType="numeric"
-            value={profile.age.toString()}
-            onChangeText={(val) => setProfile({ ...profile, age: parseInt(val) || 0 })}
-            style={styles.input}
-          />
-          <Text>Sport:</Text>
-          <Picker
-            selectedValue={profile.sport}
-            onValueChange={(val) => setProfile({ ...profile, sport: val })}
-            style={styles.picker}
-          >
-            <Picker.Item label="Soccer" value="Soccer" />
-            <Picker.Item label="Basketball" value="Basketball" />
-            <Picker.Item label="Tennis" value="Tennis" />
-          </Picker>
-
-          <Text>Context:</Text>
-          <Picker
-            selectedValue={profile.context}
-            onValueChange={(val) => setProfile({ ...profile, context: val })}
-            style={styles.picker}
-          >
-            <Picker.Item label="Before Game" value="Before Game" />
-            <Picker.Item label="After Practice" value="After Practice" />
-            <Picker.Item label="Post Tournament" value="Post Tournament" />
-          </Picker>
-
-          <Text>Anxiety Level:</Text>
-          <Picker
-            selectedValue={profile.anxiety_level}
-            onValueChange={(val) => setProfile({ ...profile, anxiety_level: val })}
-            style={styles.picker}
-          >
-            <Picker.Item label="Low" value="Low" />
-            <Picker.Item label="Medium" value="Medium" />
-            <Picker.Item label="High" value="High" />
-          </Picker>
-
-          <Text>Motivation Level:</Text>
-          <Picker
-            selectedValue={profile.motivation_level}
-            onValueChange={(val) => setProfile({ ...profile, motivation_level: val })}
-            style={styles.picker}
-          >
-            <Picker.Item label="Low" value="Low" />
-            <Picker.Item label="Medium" value="Medium" />
-            <Picker.Item label="High" value="High" />
-          </Picker>
-
-          <Button title="Start Simulation" onPress={handleStart} />
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
-}
-
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Create Athlete Profile</Text>
+        <TextInput
+          placeholder="Age"
+          keyboardType="numeric"
+          value={profile.age.toString()}
+          onChangeText={(val) => setProfile({ ...profile, age: parseInt(val) || 0 })}
+          style={styles.input}
+        />
+        <Text>Sport:</Text>
+        <Picker
+          selectedValue={profile.sport}
+          onValueChange={(val) => setProfile({ ...profile, sport: val })}
+          style={styles.picker}
+        >
+          <Picker.Item label="Soccer" value="Soccer" />
+          <Picker.Item label="Basketball" value="Basketball" />
+          <Picker.Item label="Tennis" value="Tennis" />
+        </Picker>
+        <Text>Context:</Text>
+        <Picker
+          selectedValue={profile.context}
+          onValueChange={(val) => setProfile({ ...profile, context: val })}
+          style={styles.picker}
+        >
+          <Picker.Item label="Before Game" value="Before Game" />
+          <Picker.Item label="After Practice" value="After Practice" />
+          <Picker.Item label="Post Tournament" value="Post Tournament" />
+        </Picker>
+        <Text>Anxiety Level:</Text>
+        <Picker
+          selectedValue={profile.anxiety_level}
+          onValueChange={(val) => setProfile({ ...profile, anxiety_level: val })}
+          style={styles.picker}
+        >
+          <Picker.Item label="Low" value="Low" />
+          <Picker.Item label="Medium" value="Medium" />
+          <Picker.Item label="High" value="High" />
+        </Picker>
+        <Text>Motivation Level:</Text>
+        <Picker
+          selectedValue={profile.motivation_level}
+          onValueChange={(val) => setProfile({ ...profile, motivation_level: val })}
+          style={styles.picker}
+        >
+          <Picker.Item label="Low" value="Low" />
+          <Picker.Item label="Medium" value="Medium" />
+          <Picker.Item label="High" value="High" />
+        </Picker>
+        <Button title="Start Simulation" onPress={handleStart} />
+      </View>
+    );
+  }
 
   if (step === 'evaluate') {
     return (

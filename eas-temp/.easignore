@@ -1,0 +1,16 @@
+﻿node_modules/
+.git/
+.vscode/
+.expo/
+.expo-shared/
+.DS_Store
+Thumbs.db
+desktop.ini
+__pycache__/
+venv/
+AppData/
+*.tmp
+*.log
+.cache/
+*.zip
+*.tar.gz
