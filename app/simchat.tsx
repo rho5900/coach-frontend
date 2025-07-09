@@ -78,54 +78,56 @@ export default function SimChatScreen() {
 };
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
-    const updatedChat: Message[] = [
-  ...chat,
-  { sender: 'coach' as const, message: input },
-];
+  if (!input.trim()) return;
 
+  // Don't modify state yet — prepare a temporary updatedChat
+  const tempChat: Message[] = [
+    ...chat,
+    { sender: 'coach', message: input },
+  ];
 
-    setChat(updatedChat);
-    setInput('');
-    setLoading(true);
+  setChat(tempChat);
+  setInput('');
+  setLoading(true);
 
-    try {
-      const res = await fetch('https://coach-backend-hnvv.onrender.com/simulate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          profile,
-          chat_history: updatedChat,
-        }),
-      });
-
-      const data = await res.json();
-const finalChat: Message[] = [
-  ...updatedChat,
-  { sender: 'athlete' as const, message: data.athlete_response },
-];
-setChat(finalChat);
-      
-
-      if (!user) return;
-
-      const userDoc = await getDoc(doc(db, 'users', user.uid));
-      const teamId = userDoc.data()?.teamId;
-
-
-      await addDoc(collection(db, 'simulations'), {
+  try {
+    const res = await fetch('https://coach-backend-hnvv.onrender.com/simulate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         profile,
-        chat_history: finalChat,
-        athlete_response: data.athlete_response,
-        teamId,
-        timestamp: new Date(),
-      });
-    } catch (err) {
-      console.error(err);
-    }
+        chat_history: tempChat,
+      }),
+    });
 
-    setLoading(false);
-  };
+    const data = await res.json();
+
+    const finalChat: Message[] = [
+      ...tempChat,
+      { sender: 'athlete', message: data.athlete_response },
+    ];
+
+    setChat(finalChat);
+
+    if (!user) return;
+
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    const teamId = userDoc.data()?.teamId;
+
+    await addDoc(collection(db, 'simulations'), {
+      profile,
+      chat_history: finalChat,
+      athlete_response: data.athlete_response,
+      teamId,
+      timestamp: new Date(),
+    });
+  } catch (err) {
+    console.error(err);
+  }
+
+  setLoading(false);
+};
+
 
   const endConversationAndEvaluate = async () => {
   setStep('evaluate');
